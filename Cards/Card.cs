@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cards
 {
-     public struct Card
+    public class Card
     {
         public Suit Suit;
         public Rank Rank;

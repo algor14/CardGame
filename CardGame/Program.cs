@@ -8,15 +8,21 @@ namespace CardGame
 {
     class Program
     {
-        static Blackjack blackjackGame;
+        private static Blackjack blackjackGame;
+        internal static int playerWins = 0;
+        internal static int aiWins = 0;
         static void Main(string[] args)
         {
-            startBlackjack();
+            StartBlackjack();
         }
-        static void startBlackjack()
+        public static void StartBlackjack()
         {
+            Console.WriteLine("");
+            Console.WriteLine("                   New Blackjack has started");
+            Console.WriteLine("");
             blackjackGame = new Blackjack();
             blackjackGame.StartGame();
         }
+        
     }
 }
