@@ -18,10 +18,9 @@ namespace CardGame
         public static void StartBlackjack()
         {
             Console.WriteLine("");
-            Console.WriteLine("                   New Blackjack has started");
+            Console.WriteLine("                --- New Blackjack has started ---");
             Console.WriteLine("");
             blackjackGame = new Blackjack();
-            blackjackGame.StartGame();
         }
         
     }

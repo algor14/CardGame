@@ -7,23 +7,16 @@ using Cards;
 
 namespace CardGame
 {
-    class Player : IPlayer
+    public class Player : IPlayer
     {
 
 
         private List<Card> playerCards;
-        private string _name = "Unnamed user";
 
 
         public Player()
         {
             playerCards = new List<Card>();
-        }
-
-        public Player(string name)
-            :this()
-        {
-            _name = name;
         }
 
         public int Points
@@ -36,6 +29,19 @@ namespace CardGame
                     total += (int)playerCards[i].Rank;
                 }
                 return total;
+            }
+        }
+        private bool _isPassed = false;
+        public bool IsPassed
+        {
+            get
+            {
+                return _isPassed;
+            }
+
+            set
+            {
+                _isPassed = value;
             }
         }
 
@@ -53,6 +59,18 @@ namespace CardGame
             }
             Console.WriteLine("");
             Console.WriteLine("===============================================");
+        }
+
+        public bool CheckTwoAces()
+        {
+            if (playerCards[0].Rank == Rank.Ace && playerCards[1].Rank == Rank.Ace)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

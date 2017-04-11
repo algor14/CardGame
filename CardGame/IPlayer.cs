@@ -11,6 +11,8 @@ namespace CardGame
     {
         void AddCard(Card card);
         void ShowAllCards();
+        bool CheckTwoAces();
         int Points { get; }
+        bool IsPassed { get; set; }
     }
 }

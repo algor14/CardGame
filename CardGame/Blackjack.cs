@@ -16,8 +16,6 @@ namespace CardGame
         private Player player;
         private AIPlayer aiPlayer;
         private bool playerFirst = false;       // shows who is first hand
-        private bool AIPass = false;            // shows that AI stop taking cards 
-        private bool playerPass = false;        // shows that player stop taking cards
 
 
         public Blackjack()
@@ -32,13 +30,14 @@ namespace CardGame
                 }
             }            
             ShuffleArray(arrCards);
+            StartGame();
         }
 
-        public void StartGame()
+        private void StartGame()
         {
-            player = new Player("Me");
+            player = new Player();
             aiPlayer = new AIPlayer();
-            Console.WriteLine("Do you want to be first hand? (Type \"y\" if yes)");
+            Console.WriteLine("Do you want to be a first hand? (Type \"y\" if yes)");
             string printed = Console.ReadLine();
             if (printed == "y" || printed == "yes")
             {
@@ -67,6 +66,10 @@ namespace CardGame
         // algorithm of winning
         private void GameLogic()
         {
+            if (player.CheckTwoAces())
+                player.IsPassed = true;
+            if (aiPlayer.CheckTwoAces())
+                aiPlayer.IsPassed = true;
             if(playerFirst)
             {
                 PlayerMakeDecision();
@@ -76,34 +79,69 @@ namespace CardGame
                 AIMakeDecision();
                 PlayerMakeDecision();
             }
-            if (aiPlayer.Points > 21 || player.Points > 21)
+            if (player.IsPassed && aiPlayer.IsPassed)
             #region
             {
-
                 Console.WriteLine("");
-                Console.WriteLine("Bust!!!");
+                Console.WriteLine("All players passed");
                 CheckAllHandsCards();
-                if (aiPlayer.Points > 21 && player.Points > 21)
+                if (aiPlayer.Points == player.Points)
                 {
-                    if (aiPlayer.Points > player.Points)
-                    {
-                        PlayerWon();
-                    }
-                    else if(aiPlayer.Points < player.Points)
-                    {
-                        AIWon();
-                    }else
-                    {
-                        NobodyWon();
-                    }
+                    NobodyWon();
                 }
-                else if (aiPlayer.Points > 21)
+                else if (aiPlayer.Points > player.Points)
                 {
+                    AIWon();
+                }
+                else
+                {
+                    PlayerWon();
+                }
+            }
+            #endregion
+            else if (aiPlayer.Points > 21 || player.Points > 21)
+            #region
+            {
+                Console.WriteLine("");
+                if (aiPlayer.CheckTwoAces())
+                {
+                    Console.WriteLine("AI has Blackjack!!!");
+                    CheckAllHandsCards();
+                    AIWon();
+                }
+                else if (player.CheckTwoAces())
+                {
+                    Console.WriteLine(" You have Blackjack!!!");
+                    CheckAllHandsCards();
                     PlayerWon();
                 }
                 else
                 {
-                    AIWon();
+                    Console.WriteLine("Bust!!!");
+                    CheckAllHandsCards();
+                    if (aiPlayer.Points > 21 && player.Points > 21)
+                    {
+                        if (aiPlayer.Points > player.Points)
+                        {
+                            PlayerWon();
+                        }
+                        else if (aiPlayer.Points < player.Points)
+                        {
+                            AIWon();
+                        }
+                        else
+                        {
+                            NobodyWon();
+                        }
+                    }
+                    else if (aiPlayer.Points > 21)
+                    {
+                        PlayerWon();
+                    }
+                    else
+                    {
+                        AIWon();
+                    }
                 }
             }
             #endregion
@@ -126,27 +164,7 @@ namespace CardGame
                     AIWon();
                 }
             }
-            #endregion
-            else if (playerPass && AIPass)
-            #region
-            {
-                Console.WriteLine("");
-                Console.WriteLine("All players passed");
-                CheckAllHandsCards();
-                if (aiPlayer.Points == player.Points)
-                {
-                    NobodyWon();
-                }
-                else if (aiPlayer.Points > player.Points)
-                {
-                    AIWon();
-                }
-                else
-                {
-                    PlayerWon();
-                }                           
-            }
-            #endregion
+            #endregion          
             else
             {
                 Console.WriteLine("");
@@ -159,7 +177,7 @@ namespace CardGame
         private void PlayerMakeDecision()
         {
             Console.WriteLine("-----------Your turn----------");
-            if(playerPass)
+            if(player.IsPassed)
             {
                 Console.WriteLine("--You refused cards");
                 return;
@@ -173,14 +191,14 @@ namespace CardGame
                 GiveCardsToPlayer(player);
             }else
             {
-                playerPass = true;
+                player.IsPassed = true;
             }
         }
 
         private void AIMakeDecision()
         {
             Console.WriteLine("-----------AI turn----------");
-            if(AIPass)
+            if(aiPlayer.IsPassed)
             {
                 Console.WriteLine("--AI Refused cards");
                 return;
@@ -191,7 +209,7 @@ namespace CardGame
                 Console.WriteLine("--Stops taking");
             }else if(aiPlayer.Points > 17)
             {
-                AIPass = true;
+                aiPlayer.IsPassed = true;
                 Console.WriteLine("--Stops taking");
             }
             else
@@ -203,7 +221,7 @@ namespace CardGame
                 }else
                 {
                     Console.WriteLine("--Stop taking");
-                    AIPass = true;
+                    aiPlayer.IsPassed = true;
                 }
             }
         }
