@@ -35,8 +35,8 @@ namespace CardGame
 
         private void StartGame()
         {
-            player = new Player();
-            aiPlayer = new AIPlayer();
+            player = new Player("Player");
+            aiPlayer = new AIPlayer("AI");
             Console.WriteLine("Do you want to be a first hand? (Type \"y\" if yes)");
             string printed = Console.ReadLine();
             if (printed == "y" || printed == "yes")
@@ -204,25 +204,19 @@ namespace CardGame
                 return;
             }
             Console.WriteLine($"--AI player is thinking...");
-            if (aiPlayer.Points > 20)
+            if (aiPlayer.Points == 21)
             {
                 Console.WriteLine("--Stops taking");
-            }else if(aiPlayer.Points > 17)
-            {
-                aiPlayer.IsPassed = true;
-                Console.WriteLine("--Stops taking");
+            }
+            else if(aiPlayer.ShouldTakeCard())
+            {                              
+                 Console.WriteLine("--Takes one more card");
+                 GiveCardsToPlayer(aiPlayer);               
             }
             else
             {
-                if (aiPlayer.ShouldTakeCard((21 - aiPlayer.Points)))
-                {
-                    Console.WriteLine("--Takes one more card");
-                    GiveCardsToPlayer(aiPlayer);
-                }else
-                {
-                    Console.WriteLine("--Stop taking");
-                    aiPlayer.IsPassed = true;
-                }
+                 Console.WriteLine("--Stop taking");
+                 aiPlayer.IsPassed = true;
             }
         }
 

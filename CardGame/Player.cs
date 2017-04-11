@@ -12,11 +12,12 @@ namespace CardGame
 
 
         private List<Card> playerCards;
+        protected string _name;
 
-
-        public Player()
+        public Player(string name = "Unknown Player")
         {
             playerCards = new List<Card>();
+            _name = name;
         }
 
         public int Points
@@ -52,7 +53,7 @@ namespace CardGame
 
         public void ShowAllCards()
         {
-            Console.WriteLine($"================Your cards====================");
+            Console.WriteLine($"================{_name} cards====================");
             for (int i = 0; i < playerCards.Count; i++)
             {
                 Console.Write($"{playerCards[i].Suit}-{playerCards[i].Rank}-{(int)playerCards[i].Rank}; ");

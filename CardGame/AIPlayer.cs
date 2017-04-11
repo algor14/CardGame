@@ -9,26 +9,35 @@ namespace CardGame
 {
     internal class AIPlayer : Player
     {
-        public bool ShouldTakeCard(int chance)
+
+        public AIPlayer(string name = "AI")
+        {
+            _name = name;
+        }
+        public bool ShouldTakeCard()
         {
             Random rnd = new Random();
             int randNumber = rnd.Next(0, 100);
             bool decision = false;
-            switch (chance)
+            int chance = 21 - Points;
+            if(chance < 4)
             {
-                case 4:
-                    decision = (randNumber > 80) ? true : false;
-                    break;
-                case 5:
-                    decision = (randNumber > 60) ? true : false;
-                    break;
-                case 6:
-                    decision = (randNumber > 40) ? true : false;
-                    break;
-                default:
-                    decision = true;
-                    break;
+                decision = false;
+            }else if(chance == 4)
+            {
+                decision = (randNumber > 80) ? true : false;
             }
+            else if (chance == 5)
+            {
+                decision = (randNumber > 60) ? true : false;
+            }
+            else if (chance == 6)
+            {
+                decision = (randNumber > 40) ? true : false;
+            }else
+            {
+                decision = true;
+            }           
             return decision;
         }
     }
