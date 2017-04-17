@@ -9,14 +9,11 @@ namespace CardGame
 {
     class Blackjack
     {
-
-
         private Card[] arrCards;                // array with all cards
         private int cardDeckIndex = 0;          // index of last given card in a deck
         private Player player;
         private AIPlayer aiPlayer;
         private bool playerFirst = false;       // shows who is first hand
-
 
         public Blackjack()
         {
@@ -64,77 +61,98 @@ namespace CardGame
         }
 
         // algorithm of winning
+        private bool gameStop = false;
         private void GameLogic()
         {
-            if (player.CheckTwoAces())
-                player.IsPassed = true;
-            if (aiPlayer.CheckTwoAces())
-                aiPlayer.IsPassed = true;
-            if(playerFirst)
+            
+            while (!gameStop)
             {
-                PlayerMakeDecision();
-                AIMakeDecision();
-            }else
-            {
-                AIMakeDecision();
-                PlayerMakeDecision();
-            }
-            if (player.IsPassed && aiPlayer.IsPassed)
-            #region
-            {
-                Console.WriteLine("");
-                Console.WriteLine("All players passed");
-                CheckAllHandsCards();
-                if (aiPlayer.Points == player.Points)
-                {
-                    NobodyWon();
-                }
-                else if (aiPlayer.Points > player.Points)
-                {
-                    AIWon();
-                }
-                else
-                {
-                    PlayerWon();
-                }
-            }
-            #endregion
-            else if (aiPlayer.Points > 21 || player.Points > 21)
-            #region
-            {
-                Console.WriteLine("");
+                if (player.CheckTwoAces())
+                    player.IsPassed = true;
                 if (aiPlayer.CheckTwoAces())
+                    aiPlayer.IsPassed = true;
+                if (playerFirst)
                 {
-                    Console.WriteLine("AI has Blackjack!!!");
-                    CheckAllHandsCards();
-                    AIWon();
-                }
-                else if (player.CheckTwoAces())
-                {
-                    Console.WriteLine(" You have Blackjack!!!");
-                    CheckAllHandsCards();
-                    PlayerWon();
+                    PlayerMakeDecision();
+                    AIMakeDecision();
                 }
                 else
                 {
-                    Console.WriteLine("Bust!!!");
+                    AIMakeDecision();
+                    PlayerMakeDecision();
+                }
+                if (player.IsPassed && aiPlayer.IsPassed)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("All players passed");
                     CheckAllHandsCards();
-                    if (aiPlayer.Points > 21 && player.Points > 21)
+                    if (aiPlayer.Points == player.Points)
                     {
-                        if (aiPlayer.Points > player.Points)
+                        NobodyWon();
+                    }
+                    else if (aiPlayer.Points > player.Points)
+                    {
+                        AIWon();
+                    }
+                    else
+                    {
+                        PlayerWon();
+                    }
+                }
+                else if (aiPlayer.Points > 21 || player.Points > 21)
+                {
+                    Console.WriteLine("");
+                    if (aiPlayer.CheckTwoAces())
+                    {
+                        Console.WriteLine("AI has Blackjack!!!");
+                        CheckAllHandsCards();
+                        AIWon();
+                    }
+                    else if (player.CheckTwoAces())
+                    {
+                        Console.WriteLine(" You have Blackjack!!!");
+                        CheckAllHandsCards();
+                        PlayerWon();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Bust!!!");
+                        CheckAllHandsCards();
+                        if (aiPlayer.Points > 21 && player.Points > 21)
+                        {
+                            if (aiPlayer.Points > player.Points)
+                            {
+                                PlayerWon();
+                            }
+                            else if (aiPlayer.Points < player.Points)
+                            {
+                                AIWon();
+                            }
+                            else
+                            {
+                                NobodyWon();
+                            }
+                        }
+                        else if (aiPlayer.Points > 21)
                         {
                             PlayerWon();
                         }
-                        else if (aiPlayer.Points < player.Points)
+                        else
                         {
                             AIWon();
                         }
-                        else
-                        {
-                            NobodyWon();
-                        }
                     }
-                    else if (aiPlayer.Points > 21)
+                }
+                else if (aiPlayer.Points == 21 || player.Points == 21)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Blackjack!!!");
+                    CheckAllHandsCards();
+                    if (aiPlayer.Points == 21 && player.Points == 21)
+                    {
+                        NobodyWon();
+                    }
+                    else if (player.Points == 21)
                     {
                         PlayerWon();
                     }
@@ -143,34 +161,12 @@ namespace CardGame
                         AIWon();
                     }
                 }
-            }
-            #endregion
-            else if (aiPlayer.Points == 21 || player.Points == 21)
-            #region
-            {
-                Console.WriteLine("");
-                Console.WriteLine("Blackjack!!!");
-                CheckAllHandsCards();
-                if (aiPlayer.Points == 21 && player.Points == 21)
-                {
-                    NobodyWon();
-                }
-                else if (player.Points == 21)
-                {
-                    PlayerWon();
-                }
                 else
                 {
-                    AIWon();
+                    Console.WriteLine("");
+                    Console.WriteLine("                  New Round");
+                    Console.WriteLine("");
                 }
-            }
-            #endregion          
-            else
-            {
-                Console.WriteLine("");
-                Console.WriteLine("                  New Round");
-                Console.WriteLine("");
-                GameLogic();
             }
         }
 
@@ -220,7 +216,7 @@ namespace CardGame
             }
         }
 
-        private void GiveCardsToPlayer(IPlayer currentPlayer, int cardsNumber = 1)
+        private void GiveCardsToPlayer(Player currentPlayer, int cardsNumber = 1)
         {
             for (int j = 0; j < cardsNumber; j++)
             {
@@ -242,27 +238,30 @@ namespace CardGame
 
         private void PlayerWon()
         {
-            Program.playerWins++;
+            gameStop = true;
+            Program.PlayerWin();
             Console.WriteLine("You won!");
             AskAboutNewGame();
         }
 
         private void AIWon()
         {
-            Program.aiWins++;
+            gameStop = true;
+            Program.AIWin();
             Console.WriteLine("AI won!");
             AskAboutNewGame();
         }
 
         private void NobodyWon()
         {
+            gameStop = true;
             Console.WriteLine("Nobody won!");
             AskAboutNewGame();
         }
 
         private void AskAboutNewGame()
         {
-            Console.WriteLine($"Total score: Player - {Program.playerWins}; AI - {Program.aiWins}");
+            Program.ShowTotalScores();
             Console.WriteLine("Play one more game? (Type \"y\" if yes)");
             string printed = Console.ReadLine();
             if (printed == "y" || printed == "yes")

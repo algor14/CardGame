@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="AIPlayer.cs" />
     <Compile Include="Blackjack.cs" />
-    <Compile Include="IPlayer.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

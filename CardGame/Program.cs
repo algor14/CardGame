@@ -9,12 +9,14 @@ namespace CardGame
     class Program
     {
         private static Blackjack blackjackGame;
-        internal static int playerWins = 0;
-        internal static int aiWins = 0;
+        private static int playerWins = 0;
+        private static int aiWins = 0;
+
         static void Main(string[] args)
         {
             StartBlackjack();
         }
+
         public static void StartBlackjack()
         {
             Console.WriteLine("");
@@ -22,6 +24,18 @@ namespace CardGame
             Console.WriteLine("");
             blackjackGame = new Blackjack();
         }
-        
+        public static void AIWin()
+        {
+            aiWins++;
+        }
+        public static void PlayerWin()
+        {
+            playerWins++;
+        }
+        public static void ShowTotalScores()
+        {
+            Console.WriteLine($"Total score: Player - {Program.playerWins}; AI - {Program.aiWins}");
+
+        }
     }
 }

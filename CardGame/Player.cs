@@ -7,10 +7,8 @@ using Cards;
 
 namespace CardGame
 {
-    public class Player : IPlayer
+    public class Player 
     {
-
-
         private List<Card> playerCards;
         protected string _name;
 
@@ -32,19 +30,7 @@ namespace CardGame
                 return total;
             }
         }
-        private bool _isPassed = false;
-        public bool IsPassed
-        {
-            get
-            {
-                return _isPassed;
-            }
-
-            set
-            {
-                _isPassed = value;
-            }
-        }
+        public bool IsPassed { get; set; }
 
         public void AddCard(Card card)
         {
