@@ -14,8 +14,9 @@ namespace CardGame
         private Player player;
         private AIPlayer aiPlayer;
         private bool playerFirst = false;       // shows who is first hand
+        private int winner = 0;
 
-        public Blackjack()
+        public int Init()
         {
             arrCards = new Card[36];
             int i = 0;
@@ -28,6 +29,7 @@ namespace CardGame
             }            
             ShuffleArray(arrCards);
             StartGame();
+            return winner;
         }
 
         private void StartGame()
@@ -58,13 +60,12 @@ namespace CardGame
                 arr[i + 1] = arr[index];
                 arr[index] = tmp;
             }
-        }
+        }     
 
         // algorithm of winning
         private bool gameStop = false;
         private void GameLogic()
-        {
-            
+        {           
             while (!gameStop)
             {
                 if (player.CheckTwoAces())
@@ -83,83 +84,15 @@ namespace CardGame
                 }
                 if (player.IsPassed && aiPlayer.IsPassed)
                 {
-                    Console.WriteLine("");
-                    Console.WriteLine("All players passed");
-                    CheckAllHandsCards();
-                    if (aiPlayer.Points == player.Points)
-                    {
-                        NobodyWon();
-                    }
-                    else if (aiPlayer.Points > player.Points)
-                    {
-                        AIWon();
-                    }
-                    else
-                    {
-                        PlayerWon();
-                    }
+                    BothPassed();
                 }
                 else if (aiPlayer.Points > 21 || player.Points > 21)
                 {
-                    Console.WriteLine("");
-                    if (aiPlayer.CheckTwoAces())
-                    {
-                        Console.WriteLine("AI has Blackjack!!!");
-                        CheckAllHandsCards();
-                        AIWon();
-                    }
-                    else if (player.CheckTwoAces())
-                    {
-                        Console.WriteLine(" You have Blackjack!!!");
-                        CheckAllHandsCards();
-                        PlayerWon();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Bust!!!");
-                        CheckAllHandsCards();
-                        if (aiPlayer.Points > 21 && player.Points > 21)
-                        {
-                            if (aiPlayer.Points > player.Points)
-                            {
-                                PlayerWon();
-                            }
-                            else if (aiPlayer.Points < player.Points)
-                            {
-                                AIWon();
-                            }
-                            else
-                            {
-                                NobodyWon();
-                            }
-                        }
-                        else if (aiPlayer.Points > 21)
-                        {
-                            PlayerWon();
-                        }
-                        else
-                        {
-                            AIWon();
-                        }
-                    }
+                    SomeoneBust();
                 }
                 else if (aiPlayer.Points == 21 || player.Points == 21)
                 {
-                    Console.WriteLine("");
-                    Console.WriteLine("Blackjack!!!");
-                    CheckAllHandsCards();
-                    if (aiPlayer.Points == 21 && player.Points == 21)
-                    {
-                        NobodyWon();
-                    }
-                    else if (player.Points == 21)
-                    {
-                        PlayerWon();
-                    }
-                    else
-                    {
-                        AIWon();
-                    }
+                    SomeoneHasBlackjack();
                 }
                 else
                 {
@@ -167,6 +100,89 @@ namespace CardGame
                     Console.WriteLine("                  New Round");
                     Console.WriteLine("");
                 }
+            }
+        }
+
+        private void BothPassed()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("All players passed");
+            CheckAllHandsCards();
+            if (aiPlayer.Points == player.Points)
+            {
+                NobodyWon();
+            }
+            else if (aiPlayer.Points > player.Points)
+            {
+                AIWon();
+            }
+            else
+            {
+                PlayerWon();
+            }
+        }
+
+        private void SomeoneBust()
+        {
+            Console.WriteLine("");
+            if (aiPlayer.CheckTwoAces())
+            {
+                Console.WriteLine("AI has Blackjack!!!");
+                CheckAllHandsCards();
+                AIWon();
+            }
+            else if (player.CheckTwoAces())
+            {
+                Console.WriteLine(" You have Blackjack!!!");
+                CheckAllHandsCards();
+                PlayerWon();
+            }
+            else
+            {
+                Console.WriteLine("Bust!!!");
+                CheckAllHandsCards();
+                if (aiPlayer.Points > 21 && player.Points > 21)
+                {
+                    if (aiPlayer.Points > player.Points)
+                    {
+                        PlayerWon();
+                    }
+                    else if (aiPlayer.Points < player.Points)
+                    {
+                        AIWon();
+                    }
+                    else
+                    {
+                        NobodyWon();
+                    }
+                }
+                else if (aiPlayer.Points > 21)
+                {
+                    PlayerWon();
+                }
+                else
+                {
+                    AIWon();
+                }
+            }
+        }
+
+        private void SomeoneHasBlackjack()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Blackjack!!!");
+            CheckAllHandsCards();
+            if (aiPlayer.Points == 21 && player.Points == 21)
+            {
+                NobodyWon();
+            }
+            else if (player.Points == 21)
+            {
+                PlayerWon();
+            }
+            else
+            {
+                AIWon();
             }
         }
 
@@ -239,35 +255,22 @@ namespace CardGame
         private void PlayerWon()
         {
             gameStop = true;
-            Program.PlayerWin();
             Console.WriteLine("You won!");
-            AskAboutNewGame();
+            winner = 1;
         }
 
         private void AIWon()
         {
             gameStop = true;
-            Program.AIWin();
             Console.WriteLine("AI won!");
-            AskAboutNewGame();
+            winner = 2;
         }
 
         private void NobodyWon()
         {
             gameStop = true;
             Console.WriteLine("Nobody won!");
-            AskAboutNewGame();
         }
-
-        private void AskAboutNewGame()
-        {
-            Program.ShowTotalScores();
-            Console.WriteLine("Play one more game? (Type \"y\" if yes)");
-            string printed = Console.ReadLine();
-            if (printed == "y" || printed == "yes")
-            {
-                Program.StartBlackjack();
-            }
-        }
+        
     }
 }

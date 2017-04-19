@@ -23,19 +23,26 @@ namespace CardGame
             Console.WriteLine("                --- New Blackjack has started ---");
             Console.WriteLine("");
             blackjackGame = new Blackjack();
+            ShowTotalScores(blackjackGame.Init());
         }
-        public static void AIWin()
-        {
-            aiWins++;
-        }
-        public static void PlayerWin()
-        {
-            playerWins++;
-        }
-        public static void ShowTotalScores()
-        {
-            Console.WriteLine($"Total score: Player - {Program.playerWins}; AI - {Program.aiWins}");
 
+        public static void ShowTotalScores(int winner)
+        {
+            if (winner == 1)
+            {
+                playerWins++;
+            }
+            else if(winner == 2)
+            {
+                aiWins++;
+            }
+            Console.WriteLine($"Total score: Player - {Program.playerWins}; AI - {Program.aiWins}");
+            Console.WriteLine("Play one more game? (Type \"y\" if yes)");
+            string printed = Console.ReadLine();
+            if (printed == "y" || printed == "yes")
+            {
+                StartBlackjack();
+            }
         }
     }
 }
