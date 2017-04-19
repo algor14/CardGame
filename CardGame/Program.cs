@@ -36,7 +36,7 @@ namespace CardGame
             {
                 aiWins++;
             }
-            Console.WriteLine($"Total score: Player - {Program.playerWins}; AI - {Program.aiWins}");
+            Console.WriteLine($"Total score: Player - {playerWins}; AI - {aiWins}");
             Console.WriteLine("Play one more game? (Type \"y\" if yes)");
             string printed = Console.ReadLine();
             if (printed == "y" || printed == "yes")
